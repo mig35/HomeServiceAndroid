@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <string name="text_on">on</string>
+    <string name="text_off">off</string>
+
+    <string name="text_state_on">State on</string>
+    <string name="text_state_off">State off</string>
+
+    <string name="text_undo">undo</string>
+
+    <string name="text_control_stereo">Stereo</string>
+    <string name="text_control_light">Light</string>
+    <string name="text_control_air_condition">Air Condition</string>
+
+</resources>

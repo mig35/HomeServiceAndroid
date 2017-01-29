@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+
+    <data>
+
+        <variable
+            name="screenModel"
+            type="com.mig35.homeservice.ui.main.model.ControlScreenModel" />
+
+        <import type="android.view.View" />
+
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/space_medium"
+        android:orientation="vertical"
+        tools:context=".ui.main.view.ControlActivity">
+
+        <LinearLayout
+            android:id="@+id/controls_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_medium"
+            android:layout_marginLeft="@dimen/space_medium"
+            android:layout_marginRight="@dimen/space_medium"
+            android:layout_marginStart="@dimen/space_medium"
+            android:text="@string/text_undo" />
+
+    </LinearLayout>
+
+</layout>
