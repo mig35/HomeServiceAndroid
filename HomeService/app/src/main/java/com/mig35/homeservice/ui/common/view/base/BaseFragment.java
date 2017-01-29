@@ -14,11 +14,12 @@ import com.azoft.injectorlib.InjectSavedState;
 import com.azoft.injectorlib.Injector;
 import com.mig35.homeservice.dagger.app.AppComponent;
 import com.mig35.homeservice.ui.common.view.DaggerHelper;
+import com.mig35.homeservice.utils.android.ToastShower;
 import com.squareup.leakcanary.RefWatcher;
 
 import javax.inject.Inject;
 
-public abstract class BaseFragment extends Fragment implements IBaseView {
+public abstract class BaseFragment extends Fragment implements IBaseUserView {
 
     private final Injector mInjector = Injector.init(getClass());
 
@@ -27,6 +28,8 @@ public abstract class BaseFragment extends Fragment implements IBaseView {
 
     @Inject
     RefWatcher mRefWatcher;
+    @Inject
+    ToastShower mToastShower;
 
     @CallSuper
     @Override
@@ -92,5 +95,10 @@ public abstract class BaseFragment extends Fragment implements IBaseView {
         if (activityIsFinishing && null != mRefWatcher) {
             mRefWatcher.watch(this);
         }
+    }
+
+    @Override
+    public void showToast(@NonNull final String message) {
+        mToastShower.showToast(message);
     }
 }

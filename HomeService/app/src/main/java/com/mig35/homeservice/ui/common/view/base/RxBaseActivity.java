@@ -1,6 +1,5 @@
 package com.mig35.homeservice.ui.common.view.base;
 
-import android.app.ActivityManager;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
@@ -36,10 +35,6 @@ public abstract class RxBaseActivity extends BaseActivity {
         mOnResumeSubscription = null;
 
         super.onPause();
-
-        final ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(ACTIVITY_SERVICE);
-
-        activityManager.moveTaskToFront(getTaskId(), 0);
     }
 
     @Override

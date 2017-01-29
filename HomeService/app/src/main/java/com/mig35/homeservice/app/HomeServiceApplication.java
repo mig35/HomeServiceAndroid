@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.mig35.homeservice.dagger.app.AppComponent;
 import com.mig35.homeservice.dagger.app.AppModule;
 import com.mig35.homeservice.dagger.app.DaggerAppComponent;
+import com.squareup.leakcanary.LeakCanary;
 
 public final class HomeServiceApplication extends Application {
 
@@ -19,6 +20,13 @@ public final class HomeServiceApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
 
         mAppComponent = prepareAppComponent().build();
     }

@@ -11,6 +11,9 @@ import com.azoft.injectorlib.Injector;
 import com.mig35.homeservice.app.HomeServiceApplication;
 import com.mig35.homeservice.dagger.app.AppComponent;
 import com.mig35.homeservice.ui.common.view.DaggerHelper;
+import com.mig35.homeservice.utils.android.ToastShower;
+
+import javax.inject.Inject;
 
 public abstract class BaseActivity extends AppCompatActivity implements IBaseUserView {
 
@@ -18,6 +21,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseUse
 
     @InjectSavedState
     private DaggerHelper mDaggerHelper;
+
+    @Inject
+    ToastShower mToastShower;
 
     @CallSuper
     @Override
@@ -68,5 +74,10 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseUse
         mDaggerHelper.onDestroy(isFinishing());
 
         super.onDestroy();
+    }
+
+    @Override
+    public void showToast(@NonNull final String message) {
+        mToastShower.showToast(message);
     }
 }
