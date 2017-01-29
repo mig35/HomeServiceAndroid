@@ -12,7 +12,8 @@
 
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.mig35.homeservice.ui.main.view.ControlElementView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/control_element_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/space_medium"
@@ -52,6 +53,6 @@
             android:text="@{screenModel.mState ? @string/text_state_on : @string/text_state_off}"
             android:textIsSelectable="false" />
 
-    </LinearLayout>
+    </com.mig35.homeservice.ui.main.view.ControlElementView>
 
 </layout>

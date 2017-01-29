@@ -4,33 +4,33 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
 
 public abstract class RxBaseActivity extends BaseActivity {
 
-    protected CompositeSubscription mOnCreateSubscription;
+    protected CompositeDisposable mOnCreateSubscription;
     @Nullable
-    protected CompositeSubscription mOnResumeSubscription;
+    protected CompositeDisposable mOnResumeSubscription;
 
     @CallSuper
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mOnCreateSubscription = new CompositeSubscription();
+        mOnCreateSubscription = new CompositeDisposable();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        mOnResumeSubscription = new CompositeSubscription();
+        mOnResumeSubscription = new CompositeDisposable();
     }
 
     @Override
     protected void onPause() {
-        if (null != mOnResumeSubscription && !mOnResumeSubscription.isUnsubscribed()) {
-            mOnResumeSubscription.unsubscribe();
+        if (null != mOnResumeSubscription && !mOnResumeSubscription.isDisposed()) {
+            mOnResumeSubscription.dispose();
         }
         mOnResumeSubscription = null;
 
@@ -39,8 +39,8 @@ public abstract class RxBaseActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if (null != mOnCreateSubscription && !mOnCreateSubscription.isUnsubscribed()) {
-            mOnCreateSubscription.unsubscribe();
+        if (null != mOnCreateSubscription && !mOnCreateSubscription.isDisposed()) {
+            mOnCreateSubscription.dispose();
         }
 
         super.onDestroy();

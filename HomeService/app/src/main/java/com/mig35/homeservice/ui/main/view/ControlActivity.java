@@ -8,6 +8,7 @@ import com.mig35.homeservice.dagger.app.AppComponent;
 import com.mig35.homeservice.dagger.control.ControlModule;
 import com.mig35.homeservice.databinding.ActivityControlBinding;
 import com.mig35.homeservice.databinding.ItemControlElementBinding;
+import com.mig35.homeservice.ui.common.model.UserCommand;
 import com.mig35.homeservice.ui.common.view.base.RxBaseActivity;
 import com.mig35.homeservice.ui.main.model.ControlScreenModel;
 import com.mig35.homeservice.ui.main.presenter.IControlElementPresenter;
@@ -25,6 +26,8 @@ public final class ControlActivity extends RxBaseActivity implements IControlVie
     @Override
     protected void setupBinding() {
         mDataBinding = DataBindingUtil.setContentView(this, R.layout.activity_control);
+
+        mDataBinding.undoCommandButton.setOnClickListener(v -> mControlPresenter.undoUserCommand());
     }
 
     @Override
@@ -40,11 +43,18 @@ public final class ControlActivity extends RxBaseActivity implements IControlVie
             final ItemControlElementBinding elementViewBinding = DataBindingUtil
                     .inflate(getLayoutInflater(), R.layout.item_control_element, mDataBinding.controlsContainer, false);
 
+            elementViewBinding.controlElementView.init(controlElementPresenter);
+
             elementViewBinding.setScreenModel(controlElementPresenter.getModel());
-            elementViewBinding.onButton.setOnClickListener(v -> controlElementPresenter.activate());
-            elementViewBinding.offButton.setOnClickListener(v -> controlElementPresenter.deactivate());
+            elementViewBinding.onButton.setOnClickListener(v -> executeUserCommand(controlElementPresenter, UserCommand.ON));
+            elementViewBinding.offButton.setOnClickListener(v -> executeUserCommand(controlElementPresenter, UserCommand.OFF));
 
             mDataBinding.controlsContainer.addView(elementViewBinding.getRoot());
         }
+    }
+
+    private void executeUserCommand(@NonNull final IControlElementPresenter controlElementPresenter, @NonNull final UserCommand userCommand) {
+        controlElementPresenter.sendUserCommand(userCommand);
+        mControlPresenter.addUserCommand(controlElementPresenter, userCommand);
     }
 }

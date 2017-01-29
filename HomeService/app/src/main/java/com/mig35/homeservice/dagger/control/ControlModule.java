@@ -2,6 +2,14 @@ package com.mig35.homeservice.dagger.control;
 
 import android.support.annotation.NonNull;
 
+import com.mig35.homeservice.business.control.ControlInteractor;
+import com.mig35.homeservice.business.control.IControlInteractor;
+import com.mig35.homeservice.business.controlelement.ControlElementsBuilder;
+import com.mig35.homeservice.business.controlelement.IControlElementInteractor;
+import com.mig35.homeservice.business.controlelement.IControlElementsBuilder;
+import com.mig35.homeservice.business.controlelement.aircondition.IAirConditionControlElementInteractor;
+import com.mig35.homeservice.business.controlelement.light.ILightControlElementInteractor;
+import com.mig35.homeservice.business.controlelement.stereo.IStereoControlElementInteractor;
 import com.mig35.homeservice.dagger.ActivityScope;
 import com.mig35.homeservice.data.ControlElement;
 import com.mig35.homeservice.ui.main.model.ControlElementScreenModel;
@@ -23,24 +31,34 @@ public final class ControlModule {
 
     @Provides
     @ActivityScope
-    public List<IControlElementPresenter> createControlElementsPresenters(@NonNull final ControlElement[] controlElements, @NonNull final RxSchedulersAbs rxSchedulersAbs) {
+    public IControlElementsBuilder provideControlElementsBuilder(@NonNull final IStereoControlElementInteractor stereoControlElementInteractor, @NonNull final ILightControlElementInteractor lightElementInteractor, @NonNull final IAirConditionControlElementInteractor airConditionElementInteractor) {
+        return new ControlElementsBuilder(stereoControlElementInteractor, lightElementInteractor, airConditionElementInteractor);
+    }
+
+    @Provides
+    @ActivityScope
+    public IControlInteractor provideControlInteractor() {
+        return new ControlInteractor();
+    }
+
+    @Provides
+    @ActivityScope
+    public List<IControlElementPresenter> provideControlElementsPresenters(@NonNull final IControlElementsBuilder controlElementsBuilder, @NonNull final ControlElement[] controlElements, @NonNull final RxSchedulersAbs rxSchedulersAbs) {
         final List<IControlElementPresenter> elementPresenters = new ArrayList<>();
 
         for (final ControlElement controlElement : controlElements) {
-            elementPresenters.add(createControlElementPresenter(controlElement, rxSchedulersAbs));
+            final IControlElementInteractor controlElementInteractor = controlElementsBuilder.createInteractor(controlElement);
+            //noinspection ObjectAllocationInLoop
+            final ControlElementPresenter controlElementPresenter = new ControlElementPresenter(new ControlElementScreenModel(controlElement.mNameId), controlElementInteractor, rxSchedulersAbs);
+            elementPresenters.add(controlElementPresenter);
         }
 
         return elementPresenters;
     }
 
-    @NonNull
-    private static IControlElementPresenter createControlElementPresenter(@NonNull final ControlElement controlElement, @NonNull final RxSchedulersAbs rxSchedulersAbs) {
-        return new ControlElementPresenter(new ControlElementScreenModel(controlElement.mNameId), rxSchedulersAbs);
-    }
-
     @Provides
     @ActivityScope
-    public IControlPresenter createControlPresenter(@NonNull final List<IControlElementPresenter> elementPresenters, @NonNull final RxSchedulersAbs rxSchedulersAbs) {
-        return new ControlPresenter(elementPresenters, rxSchedulersAbs);
+    public IControlPresenter provideControlPresenter(@NonNull final List<IControlElementPresenter> elementPresenters, @NonNull final IControlInteractor controlInteractor, @NonNull final RxSchedulersAbs rxSchedulersAbs) {
+        return new ControlPresenter(elementPresenters, controlInteractor, rxSchedulersAbs);
     }
 }

@@ -4,12 +4,11 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-
 import com.mig35.homeservice.ui.common.model.BaseScreenModel;
 import com.mig35.homeservice.ui.common.view.base.IBaseView;
 import com.mig35.homeservice.utils.rx.general.RxSchedulersAbs;
 
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
 
 public abstract class RxBasePresenter<View extends IBaseView, Model extends BaseScreenModel> extends BasePresenter<View, Model> {
 
@@ -17,7 +16,7 @@ public abstract class RxBasePresenter<View extends IBaseView, Model extends Base
     protected final RxSchedulersAbs mRxSchedulersAbs;
 
     @Nullable
-    private CompositeSubscription mSubscription;
+    private CompositeDisposable mSubscription;
 
     protected RxBasePresenter(@NonNull final Model model, @NonNull final RxSchedulersAbs rxSchedulersAbs) {
         super(model);
@@ -30,13 +29,13 @@ public abstract class RxBasePresenter<View extends IBaseView, Model extends Base
     protected void onBindFirstView() {
         super.onBindFirstView();
 
-        mSubscription = new CompositeSubscription();
+        mSubscription = new CompositeDisposable();
         onBindFirstView(mSubscription);
     }
 
     @SuppressWarnings("NoopMethodInAbstractClass")
     @CallSuper
-    protected void onBindFirstView(@NonNull final CompositeSubscription subscription) {
+    protected void onBindFirstView(@NonNull final CompositeDisposable subscription) {
         // pass
     }
 
@@ -46,7 +45,7 @@ public abstract class RxBasePresenter<View extends IBaseView, Model extends Base
         if (null != mSubscription) {
             onUnbindLastView(mSubscription);
 
-            mSubscription.unsubscribe();
+            mSubscription.dispose();
             mSubscription = null;
         }
 
@@ -55,7 +54,7 @@ public abstract class RxBasePresenter<View extends IBaseView, Model extends Base
 
     @SuppressWarnings("NoopMethodInAbstractClass")
     @CallSuper
-    protected void onUnbindLastView(@NonNull final CompositeSubscription subscription) {
+    protected void onUnbindLastView(@NonNull final CompositeDisposable subscription) {
         // pass
     }
 }

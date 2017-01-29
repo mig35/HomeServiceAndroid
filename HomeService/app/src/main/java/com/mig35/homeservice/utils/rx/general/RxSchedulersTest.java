@@ -1,22 +1,22 @@
 package com.mig35.homeservice.utils.rx.general;
 
-import rx.Scheduler;
-import rx.schedulers.Schedulers;
+import io.reactivex.Scheduler;
+import io.reactivex.schedulers.Schedulers;
 
 public final class RxSchedulersTest extends RxSchedulersAbs {
 
     @Override
     public Scheduler getMainThreadScheduler() {
-        return Schedulers.immediate();
+        return Schedulers.trampoline();
     }
 
     @Override
     public Scheduler getIOScheduler() {
-        return Schedulers.immediate();
+        return Schedulers.trampoline();
     }
 
     @Override
     public Scheduler getComputationScheduler() {
-        return Schedulers.immediate();
+        return Schedulers.trampoline();
     }
 }

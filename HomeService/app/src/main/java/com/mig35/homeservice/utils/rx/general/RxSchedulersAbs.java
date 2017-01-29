@@ -1,8 +1,7 @@
 package com.mig35.homeservice.utils.rx.general;
 
-import rx.Observable;
-import rx.Scheduler;
-import rx.Single;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.Scheduler;
 
 public abstract class RxSchedulersAbs {
 
@@ -12,25 +11,25 @@ public abstract class RxSchedulersAbs {
 
     public abstract Scheduler getComputationScheduler();
 
-    public <T> Observable.Transformer<T, T> getIOToMainTransformer() {
+    public <T> ObservableTransformer<T, T> getIOToMainTransformer() {
         return objectObservable -> objectObservable
                 .subscribeOn(getIOScheduler())
                 .observeOn(getMainThreadScheduler());
     }
 
-    public <T> Single.Transformer<T, T> getIOToMainTransformerSingle() {
+    public <T> ObservableTransformer<T, T> getIOToMainTransformerSingle() {
         return objectObservable -> objectObservable
                 .subscribeOn(getIOScheduler())
                 .observeOn(getMainThreadScheduler());
     }
 
-    public <T> Observable.Transformer<T, T> getComputationToMainTransformer() {
+    public <T> ObservableTransformer<T, T> getComputationToMainTransformer() {
         return objectObservable -> objectObservable
                 .subscribeOn(getComputationScheduler())
                 .observeOn(getMainThreadScheduler());
     }
 
-    public <T> Single.Transformer<T, T> getComputationToMainTransformerSingle() {
+    public <T> ObservableTransformer<T, T> getComputationToMainTransformerSingle() {
         return objectObservable -> objectObservable
                 .subscribeOn(getComputationScheduler())
                 .observeOn(getMainThreadScheduler());

@@ -13,9 +13,13 @@ public final class Guard {
      * @throws AssertionError if current thread is not MainLooper thread
      */
     public static void assertUiThread() {
-        if (!GeneralUtils.equals(Looper.getMainLooper(), Looper.myLooper())) {
+        if (!isUiThread()) {
             throw new AssertionError("current thread is not main thread");
         }
+    }
+
+    public static boolean isUiThread() {
+        return GeneralUtils.equals(Looper.getMainLooper(), Looper.myLooper());
     }
 
     /**

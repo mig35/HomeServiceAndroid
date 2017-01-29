@@ -7,7 +7,7 @@ import com.mig35.homeservice.ui.main.view.ControlActivity;
 
 import dagger.Subcomponent;
 
-@Subcomponent(modules = ControlModule.class)
+@Subcomponent(modules = {ControlModule.class, ControlElementModule.class})
 @ActivityScope
 public interface ControlComponent {
 

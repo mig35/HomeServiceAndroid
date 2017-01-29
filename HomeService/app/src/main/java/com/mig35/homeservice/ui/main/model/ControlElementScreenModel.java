@@ -1,6 +1,6 @@
 package com.mig35.homeservice.ui.main.model;
 
-import android.databinding.ObservableBoolean;
+import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
@@ -12,10 +12,10 @@ public final class ControlElementScreenModel extends BaseScreenModel {
     @StringRes
     public final int mNameId;
     @NonNull
-    public final ObservableBoolean mState;
+    public final ObservableField<Boolean> mState;
 
     public ControlElementScreenModel(@StringRes final int nameId) {
         mNameId = nameId;
-        mState = new ObservableBoolean(false);
+        mState = new ObservableField<>(false);
     }
 }
