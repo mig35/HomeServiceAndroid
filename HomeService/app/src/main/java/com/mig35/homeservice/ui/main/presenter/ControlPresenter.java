@@ -23,7 +23,7 @@ public final class ControlPresenter extends RxBasePresenter<IControlView, Contro
         super(new ControlScreenModel(elementPresenters), rxSchedulersAbs);
 
         mControlInteractor = controlInteractor;
-        mUndoCommands = new LiFoFixedSizeQueue<>(1);
+        mUndoCommands = new LiFoFixedSizeQueue<>(10);
 
         executeViewCommandSingle(view -> view.updateScreenModel(mModel));
     }

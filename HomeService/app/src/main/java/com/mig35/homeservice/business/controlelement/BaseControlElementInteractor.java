@@ -3,12 +3,8 @@ package com.mig35.homeservice.business.controlelement;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 
-import com.mig35.homeservice.utils.general.Guard;
 import com.mig35.homeservice.utils.rx.general.RxSchedulersAbs;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import com.mig35.homeservice.utils.rx.observable.ObservableObject;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -70,33 +66,23 @@ public abstract class BaseControlElementInteractor implements IControlElementInt
     @MainThread
     private static final class CustomObservableOnSubscribe<T> implements ObservableOnSubscribe<T> {
 
-        private final List<ObservableEmitter<T>> mObservableEmitters;
+        private final ObservableObject<T> mLastElement;
 
         CustomObservableOnSubscribe() {
-            mObservableEmitters = new ArrayList<>();
+            mLastElement = new ObservableObject<>();
         }
 
         @Override
         public void subscribe(final ObservableEmitter<T> e) throws Exception {
-            mObservableEmitters.add(e);
+            final ObservableObject.ElementChangeListener<T> elementChangeListener = e::onNext;
 
-            e.setCancellable(() -> {
-                if (Guard.isUiThread()) {
-                    mObservableEmitters.remove(e);
-                }
-            });
+            mLastElement.addElementChangeListener(elementChangeListener);
+
+            e.setCancellable(() -> mLastElement.removeElementChangeListener(elementChangeListener));
         }
 
         public void notifyNext(final T nextValue) {
-            final Iterator<ObservableEmitter<T>> iterator = mObservableEmitters.iterator();
-            while (iterator.hasNext()) {
-                final ObservableEmitter<T> item = iterator.next();
-                if (item.isDisposed()) {
-                    iterator.remove();
-                } else {
-                    item.onNext(nextValue);
-                }
-            }
+            mLastElement.set(nextValue);
         }
     }
 }
